@@ -8,9 +8,10 @@ import { TwoClickPolygonHandler } from './two-click-polygon-handler';
 
 // TODO edit-modes: delete handlers once EditMode fully implemented
 export class DrawEllipseByBoundingBoxHandler extends TwoClickPolygonHandler {
-  handlePointerMove(
-    event: PointerMoveEvent
-  ): { editAction: EditAction | null | undefined; cancelMapPan: boolean } {
+  handlePointerMove(event: PointerMoveEvent): {
+    editAction: EditAction | null | undefined;
+    cancelMapPan: boolean;
+  } {
     const result = { editAction: null, cancelMapPan: false };
     const clickSequence = this.getClickSequence();
 
@@ -32,7 +33,7 @@ export class DrawEllipseByBoundingBoxHandler extends TwoClickPolygonHandler {
 
     const xSemiAxis = Math.max(distance(point(polygonPoints[0]), point(polygonPoints[1])), 0.001);
     const ySemiAxis = Math.max(distance(point(polygonPoints[0]), point(polygonPoints[3])), 0.001);
-    // @ts-ignore
+    // @ts-expect-error turf types diff
     this._setTentativeFeature(ellipse(centerCoordinates, xSemiAxis, ySemiAxis));
 
     return result;

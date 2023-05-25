@@ -8,9 +8,10 @@ import { ThreeClickPolygonHandler } from './three-click-polygon-handler';
 
 // TODO edit-modes: delete handlers once EditMode fully implemented
 export class DrawEllipseUsingThreePointsHandler extends ThreeClickPolygonHandler {
-  handlePointerMove(
-    event: PointerMoveEvent
-  ): { editAction: EditAction | null | undefined; cancelMapPan: boolean } {
+  handlePointerMove(event: PointerMoveEvent): {
+    editAction: EditAction | null | undefined;
+    cancelMapPan: boolean;
+  } {
     const result = { editAction: null, cancelMapPan: false };
     const clickSequence = this.getClickSequence();
 
@@ -36,7 +37,7 @@ export class DrawEllipseUsingThreePointsHandler extends ThreeClickPolygonHandler
       const xSemiAxis = Math.max(distance(centerCoordinates, point(groundCoords)), 0.001);
       const ySemiAxis = Math.max(distance(p1, p2), 0.001) / 2;
       const options = { angle: bearing(p1, p2) };
-      // @ts-ignore
+      // @ts-expect-error turf types diff
       this._setTentativeFeature(ellipse(centerCoordinates, xSemiAxis, ySemiAxis, options));
     }
 

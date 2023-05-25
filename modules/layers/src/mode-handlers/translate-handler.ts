@@ -11,9 +11,10 @@ export class TranslateHandler extends ModeHandler {
   _geometryBeforeTranslate: FeatureCollection | null | undefined;
   _isTranslatable: boolean;
 
-  handlePointerMove(
-    event: PointerMoveEvent
-  ): { editAction: EditAction | null | undefined; cancelMapPan: boolean } {
+  handlePointerMove(event: PointerMoveEvent): {
+    editAction: EditAction | null | undefined;
+    cancelMapPan: boolean;
+  } {
     let editAction: EditAction | null | undefined = null;
 
     this._isTranslatable =
@@ -82,8 +83,9 @@ export class TranslateHandler extends ModeHandler {
     const distanceMoved = turfDistance(p1, p2);
     const direction = turfBearing(p1, p2);
 
-    const movedFeatures = turfTransformTranslate(
-      // @ts-ignore
+    // @ts-expect-error turf type diff
+    const movedFeatures: FeatureCollection = turfTransformTranslate(
+      // @ts-expect-error turf type diff
       this._geometryBeforeTranslate,
       distanceMoved,
       direction

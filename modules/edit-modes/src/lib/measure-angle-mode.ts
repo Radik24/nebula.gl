@@ -1,7 +1,5 @@
 import turfBearing from '@turf/bearing';
-// @ts-ignore
 import turfCenter from '@turf/center';
-// @ts-ignore
 import memoize from '../memoize';
 
 import { ClickEvent, PointerMoveEvent, Tooltip, ModeProps, GuideFeatureCollection } from '../types';
@@ -30,7 +28,7 @@ export class MeasureAngleMode extends GeoJsonEditMode {
         text = formatTooltip(angle);
       } else {
         // By default, round to 2 decimal places and append units
-        // @ts-ignore
+        // @ts-expect-error angle isn't string
         text = `${parseFloat(angle).toFixed(2)} ${units}`;
       }
 
@@ -40,6 +38,7 @@ export class MeasureAngleMode extends GeoJsonEditMode {
 
       const position = turfCenter({
         type: 'FeatureCollection',
+        // @ts-expect-error
         features: [point1, point2].map((p) => ({
           type: 'Feature',
           geometry: {

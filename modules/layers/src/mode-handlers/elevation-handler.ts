@@ -46,19 +46,20 @@ export class ElevationHandler extends ModifyHandler {
     });
   }
 
-  handlePointerMove(
-    event: PointerMoveEvent
-  ): { editAction: EditAction | null | undefined; cancelMapPan: boolean } {
+  handlePointerMove(event: PointerMoveEvent): {
+    editAction: EditAction | null | undefined;
+    cancelMapPan: boolean;
+  } {
     const editHandle = getPickedEditHandle(event.pointerDownPicks);
     const position = editHandle ? editHandle.position : event.groundCoords;
-    // @ts-ignore
+    // @ts-expect-error narrow event type
     return super.handlePointerMove(this.makeElevatedEvent(event, position));
   }
 
   handleStopDragging(event: StopDraggingEvent): EditAction | null | undefined {
     const editHandle = getPickedEditHandle(event.picks);
     const position = editHandle ? editHandle.position : event.groundCoords;
-    // @ts-ignore
+    // @ts-expect-error narrow event type
     return super.handleStopDragging(this.makeElevatedEvent(event, position));
   }
 

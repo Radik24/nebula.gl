@@ -31,8 +31,8 @@ export class RotateMode extends GeoJsonEditMode {
   _isSinglePointGeometrySelected = (geometry: FeatureCollection | null | undefined): boolean => {
     const { features } = geometry || {};
     if (Array.isArray(features) && features.length === 1) {
-      // @ts-ignore
-      const { type } = getGeom(features[0]);
+      // @ts-expect-error turf type diff
+      const { type }: { type: string } = getGeom(features[0]);
       return type === 'Point';
     }
     return false;
@@ -50,6 +50,7 @@ export class RotateMode extends GeoJsonEditMode {
 
     if (this._isRotating) {
       // Display rotate pivot
+      // @ts-expect-error turf types diff
       return featureCollection([turfCentroid(selectedGeometry)]) as GuideFeatureCollection;
     }
 
@@ -59,9 +60,8 @@ export class RotateMode extends GeoJsonEditMode {
     let topEdgeMidpointCoords = null;
     let longestEdgeLength = 0;
 
-    coordEach(boundingBox, (coord) => {
+    coordEach(boundingBox, (coord: Position) => {
       if (previousCoord) {
-        // @ts-ignore
         const edgeMidpoint = getIntermediatePosition(coord, previousCoord);
         if (!topEdgeMidpointCoords || edgeMidpoint[1] > topEdgeMidpointCoords[1]) {
           // Get the top edge midpoint of the enveloping box
@@ -86,15 +86,11 @@ export class RotateMode extends GeoJsonEditMode {
       guideType: 'editHandle',
       editHandleType: 'rotate',
     });
-    // @ts-ignore
-    return featureCollection([
-      // @ts-ignore
-      polygonToLine(boundingBox),
-      // @ts-ignore
-      rotateHandle,
-      // @ts-ignore
-      lineFromEnvelopeToRotateHandle,
-    ]);
+
+    const outFeatures = [polygonToLine(boundingBox), rotateHandle, lineFromEnvelopeToRotateHandle];
+
+    // @ts-expect-error turf type diff
+    return featureCollection(outFeatures);
   }
 
   handleDragging(event: DraggingEvent, props: ModeProps<FeatureCollection>) {
@@ -172,12 +168,14 @@ export class RotateMode extends GeoJsonEditMode {
     if (!this._geometryBeingRotated) {
       return null;
     }
-
+    // @ts-expect-error turf types diff
     const centroid = turfCentroid(this._geometryBeingRotated);
+    // @ts-expect-error turf types diff
     const angle = getRotationAngle(centroid, startDragPoint, currentPoint);
-    // @ts-ignore
+
+    // @ts-expect-error turf types too wide
     const rotatedFeatures: FeatureCollection = turfTransformRotate(
-      // @ts-ignore
+      // @ts-expect-error turf types too wide
       this._geometryBeingRotated,
       angle,
       {
